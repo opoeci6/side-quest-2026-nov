@@ -1,0 +1,84 @@
+[
+  {"_note": "Fictional persona data transcribed from course material."},
+  {
+    "id": "m-michelle-1048",
+    "sender": "Michelle",
+    "contact_id": "c-michelle",
+    "channel": "sms",
+    "app": null,
+    "received_at": "2026-10-21T22:48:00",
+    "text": "Mom can you get Ava at 2:30 tomorrow instead of 3:15? Early dismissal, PD afternoon 😊 thank you!!"
+  },
+  {
+    "id": "m-solitaire-0800",
+    "sender": "Solitaire",
+    "contact_id": null,
+    "channel": "app",
+    "app": "Solitaire",
+    "received_at": "2026-10-22T08:00:00",
+    "text": "Your Daily Challenge is ready! 🃏"
+  },
+  {
+    "id": "m-facebook-0830",
+    "sender": "Facebook",
+    "contact_id": null,
+    "channel": "app",
+    "app": "Facebook",
+    "received_at": "2026-10-22T08:30:00",
+    "text": "Linda Arsenault and 4 others commented on your photo."
+  },
+  {
+    "id": "m-scam-0914",
+    "sender": "+1 (902) 555-0148",
+    "contact_id": null,
+    "channel": "sms",
+    "app": null,
+    "received_at": "2026-10-22T09:14:00",
+    "text": "CanadaPost FINAL NOTICE: Your parcel will be returned to sender. Pay the $1.99 redelivery fee: canadapost-redelivery.example/pay"
+  },
+  {
+    "id": "m-pharmacy-1000",
+    "sender": "Harbourview Pharmacy",
+    "contact_id": "c-pharmacy",
+    "channel": "sms",
+    "app": null,
+    "received_at": "2026-10-22T10:00:00",
+    "text": "3rd reminder: Your prescription is ready for pickup. Please pick up by Fri Oct 23 or it will be returned to stock."
+  },
+  {
+    "id": "m-michelle-call-1447",
+    "sender": "Michelle",
+    "contact_id": "c-michelle",
+    "channel": "call",
+    "app": null,
+    "received_at": "2026-10-22T14:47:00",
+    "text": "Missed Call (2)"
+  },
+  {
+    "id": "m-michelle-1452",
+    "sender": "Michelle",
+    "contact_id": "c-michelle",
+    "channel": "sms",
+    "app": null,
+    "received_at": "2026-10-22T14:52:00",
+    "text": "Mom?? School called, Ava's waiting at the office"
+  },
+  {
+    "id": "m-michelle-1558",
+    "sender": "Michelle",
+    "contact_id": "c-michelle",
+    "channel": "sms",
+    "app": null,
+    "received_at": "2026-10-22T15:58:00",
+    "text": "Thanks for grabbing her. Did you not see my text last night? 😕"
+  },
+  {
+    "id": "m-weather-1605",
+    "sender": "Weather",
+    "contact_id": null,
+    "channel": "app",
+    "app": "Weather",
+    "received_at": "2026-10-22T16:05:00",
+    "text": "Rain starting around 5 PM."
+  }
+]
