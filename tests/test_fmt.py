@@ -57,6 +57,19 @@ def test_fmt_day(value: date, expected: str) -> None:
     assert fmt.fmt_day(value, date(2026, 10, 21)) == expected
 
 
+def test_fmt_weekday_covers_the_week() -> None:
+    week = [fmt.fmt_weekday(date(2026, 10, 19 + offset)) for offset in range(7)]
+    assert week == [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+    ]
+
+
 def test_demo_times() -> None:
     assert len(clock.DEMO_TIMES) == 5
     assert [label for label, _ in clock.DEMO_TIMES] == [

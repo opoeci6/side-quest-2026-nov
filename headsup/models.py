@@ -216,7 +216,7 @@ class AppState(_Model):
     actions: list[ProposedAction] = Field(default_factory=list)
     alerts: list[Alert] = Field(default_factory=list)
     processed_message_ids: list[str] = Field(default_factory=list)
-    evening_check: time = dt.time(19, 0)  # when she usually looks at her phone
+    evening_check: dt.time = dt.time(19, 0)  # when she usually looks at her phone
 
 
 # --------------------------------------------------------------------------

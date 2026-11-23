@@ -41,9 +41,14 @@ def fmt_time(t: time) -> str:
     return f"{hour}:{t.minute:02d} {meridiem}"
 
 
+def fmt_weekday(d: date) -> str:
+    """Return the English weekday name, e.g. ``Friday``, whatever the locale."""
+    return _WEEKDAYS[d.weekday()]
+
+
 def fmt_date_long(d: date) -> str:
     """Return a long date without the year, e.g. ``Thursday, October 22``."""
-    return f"{_WEEKDAYS[d.weekday()]}, {_MONTHS[d.month - 1]} {d.day}"
+    return f"{fmt_weekday(d)}, {_MONTHS[d.month - 1]} {d.day}"
 
 
 def fmt_day(d: date, today: date) -> str:
@@ -56,5 +61,5 @@ def fmt_day(d: date, today: date) -> str:
     if delta == -1:
         return "yesterday"
     if 2 <= delta <= 6:
-        return f"on {_WEEKDAYS[d.weekday()]}"
+        return f"on {fmt_weekday(d)}"
     return f"on {fmt_date_long(d)}"

@@ -11,7 +11,7 @@ import json
 import logging
 import os
 from collections.abc import Iterable
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import TypeVar
 from uuid import uuid4
@@ -37,11 +37,6 @@ from headsup.models import (
 )
 
 log = logging.getLogger(__name__)
-
-# `AppState.evening_check` is annotated with a bare `time`, a name the shared
-# contract module never imports, so the model cannot be built as written.
-# Supplying the name here keeps the contract untouched.
-AppState.model_rebuild(force=True, _types_namespace={"time": time})
 
 REPO_ROOT: Path = Path(__file__).resolve().parents[1]
 DATA_DIR: Path = Path(__file__).resolve().parent / "data" / "gloria"

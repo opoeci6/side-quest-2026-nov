@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta
 
-from headsup.fmt import fmt_date_long, fmt_time
+from headsup.fmt import fmt_date_long, fmt_time, fmt_weekday
 from headsup.models import (
     AppState,
     Digest,
@@ -63,7 +63,7 @@ def _deadline_lines(state: AppState, for_date) -> list[str]:
         if reminder.due == for_date:
             lines.append(f"Last day tomorrow: {reminder.title}")
         else:
-            lines.append(f"Due {reminder.due:%A}: {reminder.title}")
+            lines.append(f"Due {fmt_weekday(reminder.due)}: {reminder.title}")
     for action in state.actions:
         if (
             isinstance(action, SetReminderDue)
