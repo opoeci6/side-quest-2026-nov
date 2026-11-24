@@ -86,6 +86,10 @@ class AnthropicLLM:
             raise LLMError("Couldn't reach the AI service. Check the internet connection.") from exc
         except anthropic.APIStatusError as exc:
             raise LLMError(f"The AI service returned an error ({exc.status_code}).") from exc
+        except ValueError as exc:
+            # parse() validates the JSON itself, so a cut-off or refused answer
+            # raises pydantic's ValidationError here, before stop_reason is seen.
+            raise LLMError("The model's answer didn't match the expected format.") from exc
         _log_call(self.model, "extract", started, response)
         _check_stop_reason(response)
         parsed = response.parsed_output

@@ -242,6 +242,20 @@ def test_anthropic_extract_without_parsed_output_raises() -> None:
         llm.extract("SYS", "USER", Answer)
 
 
+def test_anthropic_extract_maps_the_sdks_own_json_error() -> None:
+    # The real parse() validates the JSON itself, so a cut-off answer raises
+    # pydantic's ValidationError from inside the SDK call.
+    def cut_off(**_kwargs: object) -> None:
+        Answer.model_validate_json('{"text": "half')
+
+    client = _anthropic_client()
+    client.messages.parse.side_effect = cut_off
+    llm = AnthropicLLM("m", client=client)
+    with pytest.raises(LLMError, match="didn't match the expected format") as info:
+        llm.extract("SYS", "USER", Answer)
+    assert isinstance(info.value.__cause__, ValueError)
+
+
 # --------------------------------------------------------------------------
 # AnthropicLLM.chat and errors
 # --------------------------------------------------------------------------
