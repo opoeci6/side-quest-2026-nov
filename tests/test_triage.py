@@ -25,6 +25,7 @@ from headsup.models import (
 from headsup.prompts import TRIAGE_SYSTEM
 from headsup.triage import (
     RETRY_SUMMARY,
+    RULE_SCAM_SUMMARY,
     SCAM_ADVICE,
     SCAM_QUESTION,
     check_new_messages,
@@ -207,6 +208,9 @@ def test_rule_scam_wins_over_the_model(seeded_state) -> None:
     assert outcome.dropped
     assert all(note.startswith("scam: ") for note in outcome.dropped)
     assert outcome.alerts == []
+    # The model didn't see a scam, so its summary isn't shown above the red card.
+    assert outcome.summary == RULE_SCAM_SUMMARY
+    assert warning.reason.endswith(f": {RULE_SCAM_SUMMARY}")
 
 
 def test_model_only_scam_uses_its_reasons(seeded_state) -> None:

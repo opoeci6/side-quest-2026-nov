@@ -44,6 +44,9 @@ log = logging.getLogger(__name__)
 SCAM_QUESTION = "This text looks like a scam."
 SCAM_ADVICE = "Don't tap the link or reply. If you're not sure, ask Michelle."
 RETRY_SUMMARY = "Heads-Up couldn't read this text yet. It will try again at the next check."
+# Used when only the rules flagged a scam: the model's own summary may repeat
+# the scammer's request in a friendly tone, right above the red card.
+RULE_SCAM_SUMMARY = "This text has the signs of a scam."
 MAX_ITEMS = 3
 WINDOW_DAYS = 60
 
@@ -327,6 +330,9 @@ def triage_message(
     reason = _reason(message, contact, summary)
 
     if rule_scam or result.looks_like_scam:
+        if not result.looks_like_scam:
+            summary = RULE_SCAM_SUMMARY
+            reason = _reason(message, contact, summary)
         for _ in result.plan_changes:
             dropped.append("scam: plan change not used")
         for _ in result.deadlines:
