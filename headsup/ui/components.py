@@ -15,7 +15,11 @@ from datetime import date, datetime, timedelta
 
 from headsup import store
 from headsup.fmt import fmt_date_long, fmt_time, fmt_weekday
-from headsup.models import AppState, Message, Occurrence
+from headsup.models import Alert, AppState, Message, Occurrence
+
+# A due alert stays on screen this long, then goes away even if nobody tapped OK.
+# Its text says "today", so it must not still be showing after the event or the next day.
+ALERT_SHOWS_FOR = timedelta(hours=2)
 
 CSS = """
 html { font-size: 21px; }
@@ -40,15 +44,16 @@ h3 { font-size: 1.25rem !important; color: #111 !important; }
   border-radius: 12px;
   padding: 0.5rem 1.1rem;
 }
+/* Streamlit puts the label in its own paragraph, which would otherwise stay small. */
+.stButton > button p,
+[data-testid^="stBaseButton"] p { font-size: 1.15rem; font-weight: 600; }
+/* White label on the green Yes button; the near-black text rule above would hide it. */
+[data-testid="stBaseButton-primary"] p { color: #fff; }
 
-.stTabs [data-baseweb="tab-list"] { gap: 0.4rem; }
-.stTabs [data-baseweb="tab"] {
-  min-height: 56px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #111;
-  padding: 0.4rem 1rem;
-}
+/* Wrap the tabs onto a second line on a phone instead of hiding some off-screen. */
+[role="tablist"] { flex-wrap: wrap; gap: 0.2rem 0.6rem; }
+[data-testid="stTab"] { min-height: 56px; padding: 0.4rem 0.6rem; }
+[data-testid="stTab"] p { font-size: 1.1rem; font-weight: 600; color: #111; }
 
 [data-testid="stVerticalBlockBorderWrapper"] { margin-bottom: 1.2rem; }
 
@@ -65,6 +70,7 @@ h3 { font-size: 1.25rem !important; color: #111 !important; }
 .hu-caption { font-size: 0.95rem; font-weight: 600; margin: 0.2rem 0 0.4rem; }
 .hu-label { font-size: 1.1rem; font-weight: 700; margin: 0.6rem 0 0.4rem; }
 .hu-signal { margin: 0.1rem 0 0.35rem 0.4rem; }
+.hu-signal::before { content: "• "; font-weight: 700; }
 .hu-advice { font-weight: 600; margin: 0.7rem 0 0.9rem; }
 
 .hu-question {
@@ -209,6 +215,27 @@ def other_reminders(state: AppState) -> list[str]:
         for reminder in state.reminders
         if not reminder.done and reminder.due is None
     ]
+
+
+def visible_alerts(state: AppState, now: datetime) -> list[Alert]:
+    """Return the due alerts that are still recent enough to show."""
+    return [alert for alert in store.due_alerts(state, now) if now < alert.at + ALERT_SHOWS_FOR]
+
+
+def check_summary(read: int, waiting: int, retries: int) -> str:
+    """Return the notice after a check, e.g. ``Read 1 new text. 1 needs your OK.``."""
+    if read == 0 and retries == 0:
+        return "No new texts."
+    text = (
+        f"Read {read} new {'text' if read == 1 else 'texts'}. "
+        f"{waiting} {'needs' if waiting == 1 else 'need'} your OK."
+    )
+    if retries:
+        text += (
+            f" {retries} {'text' if retries == 1 else 'texts'} couldn't be read"
+            " and will be tried again."
+        )
+    return text
 
 
 def received_line(message: Message) -> str:

@@ -18,6 +18,7 @@ from streamlit.testing.v1 import AppTest
 from headsup import clock, store
 from headsup.models import AppState, RescheduleEvent
 from headsup.ui.components import (
+    check_summary,
     day_heading,
     header_text,
     other_reminders,
@@ -25,6 +26,7 @@ from headsup.ui.components import (
     render_message_html,
     speak_button_html,
     text_html,
+    visible_alerts,
     week_view,
 )
 
@@ -430,11 +432,49 @@ def test_missing_key_leaves_the_rest_of_the_app_working(
 # --------------------------------------------------------------------------
 
 
+@pytest.mark.parametrize(
+    ("read", "waiting", "retries", "expected"),
+    [
+        (0, 0, 0, "No new texts."),
+        (1, 1, 0, "Read 1 new text. 1 needs your OK."),
+        (5, 3, 0, "Read 5 new texts. 3 need your OK."),
+        (3, 0, 1, "Read 3 new texts. 0 need your OK. 1 text couldn't be read and will be tried again."),
+        (0, 2, 2, "Read 0 new texts. 2 need your OK. 2 texts couldn't be read and will be tried again."),
+    ],
+)
+def test_check_summary_counts_with_the_right_words(
+    read: int, waiting: int, retries: int, expected: str
+) -> None:
+    assert check_summary(read, waiting, retries) == expected
+
+
+def test_css_holds_no_markup() -> None:
+    # st.html sanitizes its input: a "<" anywhere in the style text (even in a
+    # comment) makes it drop the whole style block, and the page loses its large print.
+    from headsup.ui.components import CSS
+
+    assert "<" not in CSS
+
+
+def test_alerts_go_away_two_hours_after_they_are_due() -> None:
+    from headsup.models import Alert
+
+    state = store.seed_state()
+    state.alerts.append(
+        Alert(id="al-1", at=datetime(2026, 10, 22, 13, 30), text="Michelle asked: …")
+    )
+    assert visible_alerts(state, datetime(2026, 10, 22, 13, 0)) == []
+    assert [a.id for a in visible_alerts(state, datetime(2026, 10, 22, 13, 30))] == ["al-1"]
+    assert [a.id for a in visible_alerts(state, datetime(2026, 10, 22, 15, 29))] == ["al-1"]
+    assert visible_alerts(state, datetime(2026, 10, 22, 15, 30)) == []
+    assert visible_alerts(state, datetime(2026, 10, 22, 19, 0)) == []
+
+
 def test_a_second_check_says_there_is_nothing_new(state_file: Path) -> None:
     at = start_app()
     pick_preset(at, 1)
     at.button(key="check").click().run()
-    assert shows(at, "Read 1 new texts. 1 need your OK.")
+    assert shows(at, "Read 1 new text. 1 needs your OK.")
 
     at.button(key="check").click().run()
     assert shows(at, "No new texts.")

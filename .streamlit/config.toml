@@ -1,5 +1,15 @@
 [theme]
 base = "light"
+# Calm green for Yes, so it never looks like the red scam cards.
+primaryColor = "#1b6b2a"
+
+[client]
+# Hide Deploy and the developer menu: the screen is for Gloria.
+toolbarMode = "viewer"
+
+[server]
+# Only this computer can open the app; it runs with the developer's own API key.
+address = "localhost"
 
 [browser]
 gatherUsageStats = false

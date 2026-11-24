@@ -12,7 +12,6 @@ import datetime as dt
 import os
 
 import streamlit as st
-import streamlit.components.v1 as components
 from dotenv import load_dotenv
 
 from headsup import chat as chat_mod
@@ -21,6 +20,7 @@ from headsup.llm import LLM, LLMConfigError, LLMError, get_llm
 from headsup.models import AppState, Message, ProposedAction, ScamWarning, TriageOutcome
 from headsup.ui.components import (
     CSS,
+    check_summary,
     day_heading,
     header_text,
     other_reminders,
@@ -28,6 +28,7 @@ from headsup.ui.components import (
     render_message_html,
     speak_button_html,
     text_html,
+    visible_alerts,
     week_view,
 )
 
@@ -157,16 +158,10 @@ def clock_controls(now: dt.datetime) -> None:
 
 def check_notice(state: AppState, outcomes: list[TriageOutcome]) -> tuple[str, str]:
     """Return the notice that says what the last check found."""
-    read = [outcome for outcome in outcomes if outcome.summary != triage.RETRY_SUMMARY]
-    retries = [outcome for outcome in outcomes if outcome.summary == triage.RETRY_SUMMARY]
-    if not read and not retries:
-        return "info", "No new texts."
-    text = f"Read {len(read)} new texts. {len(store.pending_actions(state))} need your OK."
-    for outcome in retries:
-        message = store.find_message(state, outcome.message_id)
-        sender = message.sender if message is not None else "A text"
-        text += f" {sender} couldn't be read and will be tried again."
-    return "success", text
+    retries = sum(1 for outcome in outcomes if outcome.summary == triage.RETRY_SUMMARY)
+    read = len(outcomes) - retries
+    text = check_summary(read, len(store.pending_actions(state)), retries)
+    return ("info" if read == 0 and retries == 0 else "success"), text
 
 
 def check_messages(state: AppState, now: dt.datetime) -> None:
@@ -196,7 +191,7 @@ def reset_demo() -> None:
 def sidebar(state: AppState, now: dt.datetime) -> None:
     """Draw the presenter's controls."""
     with st.sidebar:
-        st.header("Demo controls (for the presenter)")
+        st.header("Demo controls (for the presenter)", anchor=False)
         clock_controls(now)
         if st.button("Check new messages", key="check"):
             check_messages(state, now)
@@ -215,7 +210,7 @@ def sidebar(state: AppState, now: dt.datetime) -> None:
 
 def alerts(state: AppState, now: dt.datetime) -> None:
     """Draw the safety-net banners that are due."""
-    for alert in store.due_alerts(state, now):
+    for alert in visible_alerts(state, now):
         with st.container(border=True, key=f"alert-{alert.id}"):
             show(text_html(alert.text, "hu-alert"))
             action = store.find_action(state, alert.action_id) if alert.action_id else None
@@ -256,7 +251,7 @@ def scam_card(state: AppState, now: dt.datetime, action: ScamWarning) -> None:
 def choice_buttons(state: AppState, now: dt.datetime, action: ProposedAction) -> None:
     """Draw Yes and No thanks, and apply whichever she taps."""
     left, right = st.columns(2)
-    if left.button("Yes", key=f"yes-{action.id}", type="primary"):
+    if left.button("Yes", key=f"yes-{action.id}", type="primary", width="stretch"):
         try:
             store.approve(state, action.id, now)
         except ValueError:
@@ -264,7 +259,7 @@ def choice_buttons(state: AppState, now: dt.datetime, action: ProposedAction) ->
             st.rerun()
         store.save_state(state)
         st.rerun()
-    if right.button("No thanks", key=f"no-{action.id}"):
+    if right.button("No thanks", key=f"no-{action.id}", width="stretch"):
         store.reject(state, action.id)
         store.save_state(state)
         st.rerun()
@@ -292,7 +287,7 @@ def needs_ok_tab(state: AppState, now: dt.datetime) -> None:
 def tomorrow_tab(state: AppState, now: dt.datetime) -> None:
     """Draw tomorrow's summary and the button that reads it out loud."""
     summary = digest_mod.build_digest(state, now)
-    st.subheader(day_heading(summary.for_date, now.date()))
+    st.subheader(day_heading(summary.for_date, now.date()), anchor=False)
     sections = (
         ("What changed", summary.changes, False),
         ("Your plan", summary.plan, True),
@@ -302,16 +297,17 @@ def tomorrow_tab(state: AppState, now: dt.datetime) -> None:
     for title, lines, always in sections:
         if not lines and not always:
             continue
-        st.subheader(title)
+        st.subheader(title, anchor=False)
         for line in lines:
             show(text_html(line))
-    components.html(speak_button_html(digest_mod.digest_to_speech(summary)), height=90)
+    # The page is our own fixed template; the digest text sits in it JSON-encoded.
+    st.iframe(speak_button_html(digest_mod.digest_to_speech(summary)), height=90)
 
 
 def my_week_tab(state: AppState, now: dt.datetime) -> None:
     """Draw today and the six days after it, then the undated reminders."""
     for heading, lines in week_view(state, now):
-        st.subheader(heading)
+        st.subheader(heading, anchor=False)
         for line in lines:
             show(text_html(line))
     with st.expander("Other reminders"):
@@ -440,8 +436,8 @@ def main() -> None:
     now = st.session_state["now"]
     state = store.load_state()
     sidebar(state, now)
-    st.title("Hi Gloria")
-    st.subheader(header_text(now))
+    st.title("Hi Gloria", anchor=False)
+    st.subheader(header_text(now), anchor=False)
     show_notice()
     alerts(state, now)
     tabs = st.tabs(
