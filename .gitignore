@@ -221,3 +221,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project-local (Heads-Up)
+.local/
+.claude/
+.tools/
+.cache/
+
+# Local design docs and agent handoffs (never committed)
+/design/

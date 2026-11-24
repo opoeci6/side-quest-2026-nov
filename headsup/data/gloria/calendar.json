@@ -1,0 +1,99 @@
+[
+  {"_note": "Fictional persona data transcribed from course material. Times marked approx were read off a calendar screenshot; Pick up Ava's 15:15-15:45 is exact, from the event detail."},
+  {
+    "id": "ev-hair",
+    "title": "Hair appointment",
+    "location": null,
+    "start": "13:30",
+    "end": "14:30",
+    "date": "2026-10-19",
+    "repeat_weekdays": [],
+    "alert_minutes_before": null,
+    "calendar": "Gloria",
+    "overrides": {}
+  },
+  {
+    "id": "ev-ray-eye",
+    "title": "Ray - eye doctor",
+    "location": null,
+    "start": "11:00",
+    "end": "12:00",
+    "date": "2026-10-20",
+    "repeat_weekdays": [],
+    "alert_minutes_before": null,
+    "calendar": "Gloria",
+    "overrides": {}
+  },
+  {
+    "id": "ev-choir",
+    "title": "Seniors' choir practice",
+    "location": null,
+    "start": "10:00",
+    "end": "11:30",
+    "date": "2026-10-21",
+    "repeat_weekdays": [],
+    "alert_minutes_before": null,
+    "calendar": "Gloria",
+    "overrides": {}
+  },
+  {
+    "id": "ev-ava",
+    "title": "Pick up Ava",
+    "location": "Oakwood Elementary, front doors",
+    "start": "15:15",
+    "end": "15:45",
+    "date": null,
+    "repeat_weekdays": [1, 3],
+    "alert_minutes_before": null,
+    "calendar": "Gloria",
+    "overrides": {}
+  },
+  {
+    "id": "ev-noah",
+    "title": "Pick up Noah",
+    "location": null,
+    "start": "16:30",
+    "end": "17:00",
+    "date": null,
+    "repeat_weekdays": [4],
+    "alert_minutes_before": null,
+    "calendar": "Gloria",
+    "overrides": {}
+  },
+  {
+    "id": "ev-garden",
+    "title": "Garden club - fall bulb swap",
+    "location": null,
+    "start": "10:00",
+    "end": "12:00",
+    "date": "2026-10-24",
+    "repeat_weekdays": [],
+    "alert_minutes_before": null,
+    "calendar": "Gloria",
+    "overrides": {}
+  },
+  {
+    "id": "ev-church",
+    "title": "Church",
+    "location": "St. Brendan's",
+    "start": "10:30",
+    "end": "11:45",
+    "date": "2026-10-25",
+    "repeat_weekdays": [],
+    "alert_minutes_before": null,
+    "calendar": "Gloria",
+    "overrides": {}
+  },
+  {
+    "id": "ev-family-lunch",
+    "title": "Family lunch at Michelle's",
+    "location": "Michelle's house",
+    "start": "13:00",
+    "end": "15:00",
+    "date": "2026-10-25",
+    "repeat_weekdays": [],
+    "alert_minutes_before": null,
+    "calendar": "Gloria",
+    "overrides": {}
+  }
+]

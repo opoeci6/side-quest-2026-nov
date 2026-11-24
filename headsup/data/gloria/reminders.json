@@ -1,0 +1,83 @@
+[
+  {"_note": "Fictional persona data transcribed from course material."},
+  {
+    "id": "r-linda-card",
+    "title": "Thank-you card for Linda",
+    "list": "Reminders",
+    "notes": "For the casserole",
+    "due": null,
+    "due_time": null,
+    "alert_at": null,
+    "done": false
+  },
+  {
+    "id": "r-ava-costume",
+    "title": "Ava's Halloween costume, ask Michelle what size",
+    "list": "Reminders",
+    "notes": null,
+    "due": null,
+    "due_time": null,
+    "alert_at": null,
+    "done": false
+  },
+  {
+    "id": "r-prescription",
+    "title": "Pick up prescription Harbourview",
+    "list": "Reminders",
+    "notes": null,
+    "due": null,
+    "due_time": null,
+    "alert_at": null,
+    "done": false
+  },
+  {
+    "id": "r-parcel",
+    "title": "Ask Michelle about the parcel",
+    "list": "Reminders",
+    "notes": null,
+    "due": null,
+    "due_time": null,
+    "alert_at": null,
+    "done": false
+  },
+  {
+    "id": "r-apples",
+    "title": "Apples (6) for crisp",
+    "list": "Groceries",
+    "notes": null,
+    "due": null,
+    "due_time": null,
+    "alert_at": null,
+    "done": false
+  },
+  {
+    "id": "r-oats",
+    "title": "Oats",
+    "list": "Groceries",
+    "notes": null,
+    "due": null,
+    "due_time": null,
+    "alert_at": null,
+    "done": false
+  },
+  {
+    "id": "r-brown-sugar",
+    "title": "Brown sugar",
+    "list": "Groceries",
+    "notes": null,
+    "due": null,
+    "due_time": null,
+    "alert_at": null,
+    "done": false
+  },
+  {
+    "id": "r-milk",
+    "title": "Milk",
+    "list": "Groceries",
+    "notes": null,
+    "due": null,
+    "due_time": null,
+    "alert_at": null,
+    "done": false
+  }
+]
