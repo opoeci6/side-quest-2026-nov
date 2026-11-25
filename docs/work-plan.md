@@ -1,4 +1,4 @@
-# Heads-Up: work plan
+# Work plan
 
 **Goal for Fri Nov 27:** a working large-print app that replays Gloria's Oct 21–22. It turns Michelle's late-night text into a one-tap calendar change with a safety-net alert, gives the pharmacy deadline a date, flags the Canada Post scam, and shows a 7 PM "Tomorrow" summary. Code goes on GitHub with tests and a measured eval score.
 
@@ -12,6 +12,25 @@
 | Wed Nov 25 | **D** Streamlit app: Needs your OK, Tomorrow (read aloud), My week, Ask me, Check a text | Demo script runs end to end |
 | Thu Nov 26 | Fixes from the full demo; stretch: pickup alerts, Google Calendar test-account sync | Demo is reliable |
 | Fri Nov 27 | Showcase: README, screenshots, screen recording, eval results, submit | Submitted |
+
+## Hours
+
+About 15 hours for the week, planned as follows:
+
+| Module | Planned hours |
+|---|---|
+| Pitch (research the persona, write and submit) | 3 |
+| Work plan and design spec | 2 |
+| Build (steps A–D, reviews, fixes, eval) | 6 |
+| Showcase (README, screenshots, recording, submission) | 4 |
+
+## Tools
+
+- **Language and app:** Python 3.11, Streamlit for the large-print screen, Pydantic to check every model answer.
+- **Model:** Claude Haiku 5.5 through the Anthropic SDK by default. The OpenAI SDK covers any OpenAI-compatible provider. Keys stay in a local `.env`.
+- **Testing:** pytest with a scripted fake model, so tests need no network. A 20-case eval runs against the real model.
+- **Code and CI:** Git and GitHub, one pull request per step, with GitHub Actions running the tests on each one.
+- **AI help:** Claude Code writes the design and step-by-step handoffs and reviews each step. A coding agent writes the code from those handoffs. I run the agent, review the results, and do the commits and merges myself.
 
 ## How I'll check it
 
@@ -32,4 +51,3 @@
 2. The "alert before every pickup" proposal
 3. The "Check a text" tab
 
-The core (triage, approval, alert, Tomorrow summary) stays.
