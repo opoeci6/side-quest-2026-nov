@@ -28,6 +28,7 @@ from headsup.models import (
     TriageOutcome,
 )
 from headsup.prompts import TRIAGE_SYSTEM, build_triage_user
+from headsup import scam_rules
 from headsup.scam_rules import is_suspicious, scam_signals
 from headsup.store import (
     add_outcome,
@@ -52,6 +53,23 @@ WINDOW_DAYS = 60
 
 _MAX_REASONS = 3
 _REASON_LIMIT = 200
+
+# Words that show a model's scam reason only repeats a sign the rules already
+# found, e.g. "Includes a link to click" next to "It has a link."
+_RULE_WORDS = {
+    scam_rules.UNKNOWN_SENDER: ("contact", "unknown number", "don't know", "do not know"),
+    scam_rules.HAS_LINK: ("link", "url", "website"),
+    scam_rules.ASKS_FOR_MONEY: ("pay", "fee", "money", "card", "bank"),
+    scam_rules.RUSHES_YOU: ("rush", "urgen", "hurry", "final notice"),
+}
+
+
+def _repeats_a_rule(reason: str, signals: list[str]) -> bool:
+    """Return True if ``reason`` says the same as one of the rule ``signals``."""
+    lowered = reason.lower()
+    return any(
+        word in lowered for signal in signals for word in _RULE_WORDS.get(signal, ())
+    )
 
 
 def _day(day: date, now: datetime) -> str:
@@ -341,7 +359,7 @@ def triage_message(
         added = 0
         for raw in result.scam_reasons:
             text = raw.strip()[:120]
-            if not text or text in combined:
+            if not text or text in combined or _repeats_a_rule(text, signals):
                 continue
             combined.append(text)
             added += 1
